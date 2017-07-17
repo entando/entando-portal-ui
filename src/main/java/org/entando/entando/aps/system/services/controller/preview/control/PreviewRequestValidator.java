@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.agiletec.aps.system.services.controller.control;
+package org.entando.entando.aps.system.services.controller.preview.control;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,13 +23,15 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
+import com.agiletec.aps.system.services.controller.control.AbstractControlService;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.page.PageUtils;
+import com.agiletec.aps.system.services.page.Page;
+import com.agiletec.aps.system.services.page.PageMetadata;
+import com.agiletec.aps.system.services.page.Widget;
 
 /**
  * Implementazione del un sottoservizio di controllo che verifica la validità
@@ -47,9 +49,9 @@ import com.agiletec.aps.system.services.page.PageUtils;
  * 
  * @author M.Diana - E.Santoboni
  */
-public class RequestValidator extends AbstractControlService {
+public class PreviewRequestValidator extends AbstractControlService {
 
-	private static final Logger _logger = LoggerFactory.getLogger(RequestValidator.class);
+	private static final Logger _logger = LoggerFactory.getLogger(PreviewRequestValidator.class);
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -73,20 +75,15 @@ public class RequestValidator extends AbstractControlService {
 		// Se si è verificato un errore in un altro sottoservizio, termina
 		// subito
 		if (status == ControllerManager.ERROR) {
-			return status;
+			return ControllerManager.SYS_ERROR;
 		}
 		try { // non devono essere rilanciate eccezioni
 			boolean ok = this.isRightPath(reqCtx);
-			if (ok) {
-				if (null == reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE)) {
-					retStatus = this.redirect(this.getNotFoundPageCode(), reqCtx);
-				} else if (null == reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG)) {
-					retStatus = this.redirect(this.getErrorPageCode(), reqCtx);
-				} else {
-					retStatus = ControllerManager.CONTINUE;
-				}
+			if (!ok || null == reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE) || null == reqCtx.getExtraParam(
+					SystemConstants.EXTRAPAR_CURRENT_LANG)) {
+				retStatus = ControllerManager.SYS_ERROR;
 			} else {
-				retStatus = this.redirect(this.getErrorPageCode(), reqCtx);
+				retStatus = ControllerManager.CONTINUE;
 			}
 		} catch (Throwable t) {
 			retStatus = ControllerManager.SYS_ERROR;
@@ -102,34 +99,15 @@ public class RequestValidator extends AbstractControlService {
 		Matcher matcher;
 		Lang lang = null;
 		IPage page = null;
-		if (this.getResourcePath(reqCtx).equals("/pages")) {
+		if (this.getResourcePath(reqCtx).equals("/preview")) {
 			resourcePath = getFullResourcePath(reqCtx);
-			matcher = this._patternFullPath.matcher(resourcePath);
-			if (matcher.lookingAt()) {
-				ok = true;
-				String sect1 = matcher.group(1);
-				lang = getLangManager().getLang(sect1);
-				page = this.getPage(matcher);
-			}
-		} else {
-			resourcePath = getResourcePath(reqCtx);
 			matcher = this._pattern.matcher(resourcePath);
 			if (matcher.lookingAt()) {
 				ok = true;
 				String sect1 = matcher.group(1);
 				String sect2 = matcher.group(2);
 				lang = getLangManager().getLang(sect1);
-				page = this.getPageManager().getOnlinePage(sect2);
-			} else {
-				// to preserve url with ".wp" suffix
-				matcher = this._oldPattern.matcher(resourcePath);
-				if (matcher.lookingAt()) {
-					ok = true;
-					String sect1 = matcher.group(1);
-					String sect2 = matcher.group(2);
-					lang = getLangManager().getLang(sect1);
-					page = this.getPageManager().getOnlinePage(sect2);
-				}
+				page = this.getDesiredPage(sect2);
 			}
 		}
 		if (!ok)
@@ -139,37 +117,21 @@ public class RequestValidator extends AbstractControlService {
 		return true;
 	}
 
-	/**
-	 * Qualora si usasse il mapping /pages/* restituisce un'oggetto IPage solo
-	 * nel caso in cui il path completo della pagina risulti corretto. Qualora
-	 * il path sia di lunghezza pari a zero verrà restituita l'homepage.
-	 * 
-	 * @param Matcher
-	 * il matcher valorizzato come segue<br>
-	 * matcher.group(1) -> lang_code<br>
-	 * matcher.group(2) -> /paginaX/paginaY<br>
-	 * matcher.group(3) -> /paginaY<br>
-	 * @return un oggetto Page oppure null
-	 */
-	private IPage getPage(Matcher matcher) {
-		IPage page = null;
-		String rootCode = this.getPageManager().getOnlineRoot().getCode();
-		String path = matcher.group(2);
-		// Se il path è di tipo /it o /it/ o /it/homepage
-		if (path.trim().length() == 0 || path.substring(1).equals(rootCode)) {
-			return this.getPageManager().getOnlineRoot();
-		}
-		String pageCode = matcher.group(3).substring(1);
-		IPage tempPage = this.getPageManager().getOnlinePage(pageCode);
-		if (null != tempPage) {
-			// la pagina esiste ed è di livello 1
-			// if(tempPage.getParentCode().equals(rootCode)) return tempPage;
-			// la pagina è di livello superiore al primo e il path è corretto
-			String fullPath = matcher.group(2).substring(1).trim();
-			String createdlFullPath = PageUtils.getFullPath(tempPage, "/").toString();
-			if (null != tempPage && createdlFullPath.equals(fullPath)) {
-				page = tempPage;
-			}
+	private Page getDesiredPage(String pageCode) {
+		Page page = null;
+		IPage currentPage = this.getPageManager().getDraftPage(pageCode);
+		if (null != currentPage) {
+			page = new Page();
+			page.setCode(currentPage.getCode());
+			page.setParent(currentPage.getParent());
+			page.setParentCode(currentPage.getParentCode());
+			page.setGroup(currentPage.getGroup());
+			PageMetadata metadata = currentPage.getMetadata();
+			page.setMetadata(metadata);
+			IPage[] children = currentPage.getChildren();
+			page.setChildren(children);
+			Widget[] widgets = currentPage.getWidgets();
+			page.setWidgets(widgets);
 		}
 		return page;
 	}
@@ -189,14 +151,6 @@ public class RequestValidator extends AbstractControlService {
 		return this.getResourcePath(reqCtx) + reqCtx.getRequest().getPathInfo();
 	}
 
-	protected String getErrorPageCode() {
-		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_ERROR_PAGE_CODE);
-	}
-
-	protected String getNotFoundPageCode() {
-		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
-	}
-
 	protected ILangManager getLangManager() {
 		return _langManager;
 	}
@@ -213,23 +167,9 @@ public class RequestValidator extends AbstractControlService {
 		this._pageManager = pageManager;
 	}
 
-	protected ConfigInterface getConfigManager() {
-		return configManager;
-	}
-
-	public void setConfigManager(ConfigInterface configService) {
-		this.configManager = configService;
-	}
-
 	private ILangManager _langManager;
 	private IPageManager _pageManager;
-	private ConfigInterface configManager;
 
-	@Deprecated
-	protected Pattern _oldPattern = Pattern.compile("^/(\\w+)/(\\w+)\\Q.wp\\E");
-
-	protected Pattern _pattern = Pattern.compile("^/(\\w+)/(\\w+)\\Q.page\\E");
-
-	protected Pattern _patternFullPath = Pattern.compile("^/pages/(\\w+)((/\\w+)*)");
+	protected Pattern _pattern = Pattern.compile("^/preview/(\\w+)/((\\w+)*)");
 
 }
