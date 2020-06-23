@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>entando-core</artifactId>
-        <groupId>org.entando.entando</groupId>
-        <version>6.2.0-SNAPSHOT</version>
+        <groupId>org.entando</groupId>
+        <artifactId>entando-core-parent</artifactId>
+        <version>6.2.2</version>
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-portal-ui</artifactId>
-    <version>6.2.0-SNAPSHOT</version>
+    <version>${entando-admin-console.version}</version>
     <packaging>war</packaging>
     <name>Entando Core: Portal UI</name>
     <description>Entando Portal UI: an agile, modern and user-centric open source Portal platform.</description>
@@ -24,6 +24,27 @@
         <name>Entando Inc.</name>
         <url>http://www.entando.com/</url>
     </organization>
+    <repositories>
+        <repository>
+            <id>nexus-jx</id>
+            <url>https://nexus-jx.apps.serv.run/repository/maven-releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <properties>
+        <entando-engine.version>6.2.5</entando-engine.version>
+        <xom.version>1.2.5</xom.version>
+        <esapi.version>2.1.0.1</esapi.version>
+        <entando-admin-console.version>6.2.5</entando-admin-console.version>
+        <checkstyle.skip>true</checkstyle.skip>
+        <allTestsSuiteClass>org.entando.entando.aps.system.services.controller.control.TestRequestValidator</allTestsSuiteClass>
+<!--        <allTestsSuiteClass>org.entando.entando.aps.AllTests</allTestsSuiteClass>-->
+    </properties>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <extensions>
@@ -100,19 +121,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.5</version>
                 <executions>
                     <execution>
                         <id>make-a-jar</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>jar</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>make-a-test-jar</id>
-                        <goals>
-                            <goal>test-jar</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -158,9 +172,9 @@
                         </goals>
                         <phase>deploy</phase>
                         <configuration>
+                            <repositoryId>nexus</repositoryId>
+                            <url>http://nexus/repository/maven-releases</url>
                             <file>${project.build.directory}/${project.build.finalName}.jar</file>
-                            <url>${maven-repository-url-release}</url>
-                            <repositoryId>nexus-release</repositoryId>
                             <generatePom>false</generatePom>
                             <pomFile>pom.xml</pomFile>
                             <packaging>jar</packaging>
@@ -168,6 +182,55 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources-test</id>
+                        <!-- here the phase you need -->
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/test</outputDirectory>
+                            <encoding>UTF-8</encoding>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/test/config</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources-file-test-</id>
+                        <!-- here the phase you need -->
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/test/resources/</outputDirectory>
+                            <encoding>UTF-8</encoding>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/test/config</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M1</version></plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -232,12 +295,12 @@
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-engine</artifactId>
-            <version>6.2.0-SNAPSHOT</version>
+            <version>${entando-engine.version}</version>
         </dependency>
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-engine</artifactId>
-            <version>6.2.0-SNAPSHOT</version>
+            <version>${entando-engine.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -247,18 +310,18 @@
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-admin-console</artifactId>
-            <version>6.2.0-SNAPSHOT</version>
+            <version>${entando-admin-console.version}</version>
         </dependency>
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-admin-console</artifactId>
-            <version>6.2.0-SNAPSHOT</version>
+            <version>${entando-admin-console.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-admin-console</artifactId>
-            <version>6.2.0-SNAPSHOT</version>
+            <version>${entando-admin-console.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -267,7 +330,7 @@
         <dependency>
             <groupId>org.owasp.esapi</groupId>
             <artifactId>esapi</artifactId>
-            <version>2.1.0.1</version>
+            <version>${esapi.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.beanshell</groupId>
@@ -322,7 +385,7 @@
         <dependency>
             <groupId>xom</groupId>
             <artifactId>xom</artifactId>
-            <version>1.2.5</version>
+            <version>${xom.version}</version>
             <scope>compile</scope>
             <exclusions>
                 <!-- excluded for high vulnerability -->
@@ -341,15 +404,29 @@
 
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
         </dependency>
     </dependencies>
 </project>
