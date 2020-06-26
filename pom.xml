@@ -40,8 +40,8 @@
         <entando-engine.version>6.2.6</entando-engine.version>
         <entando-admin-console.version>6.2.7</entando-admin-console.version>
         <checkstyle.skip>true</checkstyle.skip>
-        <allTestsSuiteClass>org.entando.entando.aps.system.services.controller.control.TestRequestValidator</allTestsSuiteClass>
-<!--        <allTestsSuiteClass>org.entando.entando.aps.AllTests</allTestsSuiteClass>-->
+<!--        <allTestsSuiteClass>org.entando.entando.aps.system.services.controller.control.TestRequestValidator</allTestsSuiteClass>-->
+        <allTestsSuiteClass>org.entando.entando.aps.AllTests</allTestsSuiteClass>
         <maven-repository-url-release>http://nexus/repository/maven-releases</maven-repository-url-release>
         <maven-repository-id-release>nexus</maven-repository-id-release>
     </properties>
