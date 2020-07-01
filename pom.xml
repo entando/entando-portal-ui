@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando</groupId>
         <artifactId>entando-core-parent</artifactId>
-        <version>6.2.4</version>
+        <version>6.2.10</version>
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-portal-ui</artifactId>
@@ -37,8 +37,8 @@
         </repository>
     </repositories>
     <properties>
-        <entando-engine.version>6.2.6</entando-engine.version>
-        <entando-admin-console.version>6.2.7</entando-admin-console.version>
+        <entando-engine.version>6.2.7</entando-engine.version>
+        <entando-admin-console.version>6.2.8</entando-admin-console.version>
         <checkstyle.skip>true</checkstyle.skip>
 <!--        <allTestsSuiteClass>org.entando.entando.aps.system.services.controller.control.TestRequestValidator</allTestsSuiteClass>-->
         <allTestsSuiteClass>org.entando.entando.aps.AllTests</allTestsSuiteClass>
@@ -134,11 +134,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archiveClasses>true</archiveClasses>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -225,12 +220,11 @@
                     </execution>
                 </executions>
             </plugin>
-
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M1</version></plugin>
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-surefire-plugin</artifactId>
+                 <version>3.0.0-M1</version>
+             </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
