@@ -41,10 +41,6 @@
         <entando-admin-console.version>6.2.10</entando-admin-console.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.skip>true</checkstyle.skip>
-<!--        <allTestsSuiteClass>org.entando.entando.aps.system.services.controller.control.TestRequestValidator</allTestsSuiteClass>-->
-        <allTestsSuiteClass>org.entando.entando.aps.AllTests</allTestsSuiteClass>
-        <maven-repository-url-release>http://nexus/repository/maven-releases</maven-repository-url-release>
-        <maven-repository-id-release>nexus</maven-repository-id-release>
     </properties>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
