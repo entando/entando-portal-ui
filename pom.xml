@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando</groupId>
         <artifactId>entando-core-parent</artifactId>
-        <version>6.2.12</version>
+        <version>6.2.14</version>
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-portal-ui</artifactId>
@@ -37,8 +37,8 @@
         </repository>
     </repositories>
     <properties>
-        <entando-engine.version>6.2.9</entando-engine.version>
-        <entando-admin-console.version>6.2.10</entando-admin-console.version>
+        <entando-engine.version>6.2.23</entando-engine.version>
+        <entando-admin-console.version>6.2.35</entando-admin-console.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
@@ -215,20 +215,11 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
-
-
         <dependency>
             <groupId>org.entando.entando</groupId>
             <artifactId>entando-admin-console</artifactId>
             <version>${entando-admin-console.version}</version>
             <classifier>classes</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.entando.entando</groupId>
-            <artifactId>entando-admin-console</artifactId>
-            <version>${entando-admin-console.version}</version>
-            <type>war</type>
         </dependency>
         <dependency>
             <groupId>org.entando.entando</groupId>
