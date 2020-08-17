@@ -6,5 +6,9 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=entando_entando-portal-ui&metric=security_rating)](https://sonarcloud.io/dashboard?id=entando_entando-portal-ui)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=entando_entando-portal-ui&metric=sqale_index)](https://sonarcloud.io/dashboard?id=entando_entando-portal-ui)
 
-entando-portal-ui
-============
+# entando-portal-ui
+
+# Developing against local versions of upstream projects (e.g. admin-console,  entando-engine).
+
+Full instructions on how to develop against local versions of upstream projects are available in the
+[entando-parent-bom](https://github.com/entando/entando-core-bom) project. 
