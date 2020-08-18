@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.entando</groupId>
         <artifactId>entando-core-parent</artifactId>
-        <version>6.2.14</version>
+        <version>6.2.15</version>
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-portal-ui</artifactId>
@@ -37,8 +37,6 @@
         </repository>
     </repositories>
     <properties>
-        <entando-engine.version>6.2.23</entando-engine.version>
-        <entando-admin-console.version>6.2.35</entando-admin-console.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
@@ -201,32 +199,22 @@
             </plugins>
         </pluginManagement>
     </build>
-
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.entando</groupId>
+                <artifactId>entando-core-bom</artifactId>
+                <version>6.2.6</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.entando.entando</groupId>
-            <artifactId>entando-engine</artifactId>
-            <version>${entando-engine.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.entando.entando</groupId>
-            <artifactId>entando-engine</artifactId>
-            <version>${entando-engine.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.entando.entando</groupId>
             <artifactId>entando-admin-console</artifactId>
-            <version>${entando-admin-console.version}</version>
             <classifier>classes</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.entando.entando</groupId>
-            <artifactId>entando-admin-console</artifactId>
-            <version>${entando-admin-console.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
 
         <!-- esapi - start of section -->
@@ -251,6 +239,20 @@
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>org.entando.entando</groupId>
+            <artifactId>entando-engine</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.entando.entando</groupId>
+            <artifactId>entando-admin-console</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
