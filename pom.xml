@@ -37,8 +37,6 @@
         </repository>
     </repositories>
     <properties>
-        <entando-engine.version>6.2.23</entando-engine.version>
-        <entando-admin-console.version>6.2.35</entando-admin-console.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
