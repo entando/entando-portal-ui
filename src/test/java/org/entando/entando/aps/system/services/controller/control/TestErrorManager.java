@@ -18,7 +18,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 
@@ -33,7 +33,7 @@ public class TestErrorManager extends BaseTestCase {
         this.init();
     }
     
-    public void testService() throws ApsSystemException {
+    public void testService() throws EntException {
 		RequestContext reqCtx = new RequestContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setParameter(RequestContext.PAR_REDIRECT_FLAG, "");

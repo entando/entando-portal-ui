@@ -15,8 +15,8 @@ package com.agiletec.aps.system.services.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.AbstractService;
@@ -33,7 +33,7 @@ import com.agiletec.aps.system.services.controller.control.ControlServiceInterfa
  */
 public class ControllerManager extends AbstractService {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ControllerManager.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ControllerManager.class);
 	
 	@Override
 	public void init() throws Exception {

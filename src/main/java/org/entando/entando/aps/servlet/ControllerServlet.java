@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.entando.entando.aps.system.services.controller.executor.ExecutorBeanContainer;
 import org.entando.entando.aps.system.services.controller.executor.ExecutorServiceInterface;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -48,7 +48,7 @@ import freemarker.template.TemplateModelException;
  */
 public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ControllerServlet.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ControllerServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) 

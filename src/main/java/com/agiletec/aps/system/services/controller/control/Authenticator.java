@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -35,7 +35,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
  */
 public class Authenticator extends AbstractControlService {
 
-	private static final Logger _logger = LoggerFactory.getLogger(Authenticator.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(Authenticator.class);
 
 	
 	@Override

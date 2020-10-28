@@ -15,8 +15,8 @@ package org.entando.entando.aps.system.services.controller.executor;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -28,7 +28,7 @@ import com.agiletec.aps.tags.util.HeadInfoContainer;
  */
 public class WidgetExecutorService extends AbstractWidgetExecutorService implements ExecutorServiceInterface {
 
-	private static final Logger _logger = LoggerFactory.getLogger(WidgetExecutorService.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(WidgetExecutorService.class);
 
 	@Override
 	public void afterPropertiesSet() throws Exception {

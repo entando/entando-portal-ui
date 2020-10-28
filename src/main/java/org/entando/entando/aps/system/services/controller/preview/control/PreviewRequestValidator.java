@@ -18,8 +18,8 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -51,7 +51,7 @@ import com.agiletec.aps.system.services.page.Widget;
  */
 public class PreviewRequestValidator extends AbstractControlService {
 
-	private static final Logger _logger = LoggerFactory.getLogger(PreviewRequestValidator.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PreviewRequestValidator.class);
 
 	@Override
 	public void afterPropertiesSet() throws Exception {

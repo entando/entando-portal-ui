@@ -29,15 +29,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 /**
  * @author E.Santoboni
  */
 public class PageExecutorService implements ExecutorServiceInterface {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(PageExecutorService.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PageExecutorService.class);
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {

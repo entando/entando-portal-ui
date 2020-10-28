@@ -16,12 +16,12 @@ package org.entando.entando.aps.system.services.controller.executor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.page.IPage;
 
 /**
@@ -33,7 +33,7 @@ import com.agiletec.aps.system.services.page.IPage;
  */
 public class ContentNegotiationExecutorService implements ExecutorServiceInterface {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(ContentNegotiationExecutorService.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ContentNegotiationExecutorService.class);
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -75,7 +75,7 @@ public class ContentNegotiationExecutorService implements ExecutorServiceInterfa
 			}
 		} catch (Throwable t) {
 			_logger.error("Error detected while verifying mimetype", t);
-			throw new ApsSystemException("Error detected while verifying mimetype", t);
+			throw new EntException("Error detected while verifying mimetype", t);
 		}
 		return DEFAULT_MIMETYPE;
 	}

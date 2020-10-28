@@ -21,12 +21,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
@@ -42,7 +42,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
  */
 public class RequestAuthorizator extends AbstractControlService {
 
-	private static final Logger _logger = LoggerFactory.getLogger(RequestAuthorizator.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(RequestAuthorizator.class);
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -70,7 +70,7 @@ public class RequestAuthorizator extends AbstractControlService {
 			IPage currentPage = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
 			UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 			if (null == currentUser) {
-				throw new ApsSystemException("no user on session");
+				throw new EntException("no user on session");
 			}
 			boolean authorized = this.getAuthManager().isAuth(currentUser, currentPage);
 			if (authorized) {

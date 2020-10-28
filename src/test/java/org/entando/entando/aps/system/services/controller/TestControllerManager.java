@@ -18,7 +18,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 
 /**
@@ -26,7 +26,7 @@ import com.agiletec.aps.system.services.controller.ControllerManager;
  */
 public class TestControllerManager extends BaseTestCase {
 
-    public void testService_1() throws ApsSystemException {
+    public void testService_1() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ControllerManager controller = (ControllerManager) this.getService(SystemConstants.CONTROLLER_MANAGER);
         MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
@@ -40,7 +40,7 @@ public class TestControllerManager extends BaseTestCase {
         assertEquals(ControllerManager.OUTPUT, status);
     }
 
-    public void testService_2() throws ApsSystemException {
+    public void testService_2() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ControllerManager controller = (ControllerManager) this.getService(SystemConstants.CONTROLLER_MANAGER);
         MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
@@ -55,7 +55,7 @@ public class TestControllerManager extends BaseTestCase {
         assertEquals(ControllerManager.OUTPUT, status);
     }
 
-    public void testService_3() throws ApsSystemException {
+    public void testService_3() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ControllerManager controller = (ControllerManager) this.getService(SystemConstants.CONTROLLER_MANAGER);
         MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();

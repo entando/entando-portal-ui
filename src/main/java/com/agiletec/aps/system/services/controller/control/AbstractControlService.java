@@ -18,14 +18,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.url.PageURL;
+import org.slf4j.Logger;
 
 /**
  * Classe di utilità che implementa un metodo per impostare una redirezione ed
@@ -34,7 +35,7 @@ import com.agiletec.aps.system.services.url.PageURL;
  */
 public abstract class AbstractControlService implements ControlServiceInterface {
 
-	private static final Logger _logger = LoggerFactory.getLogger(AbstractControlService.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AbstractControlService.class);
 	
 	/**
 	 * Imposta i parametri di una redirezione.

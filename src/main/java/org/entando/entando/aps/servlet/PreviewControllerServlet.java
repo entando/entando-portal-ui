@@ -20,8 +20,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.controller.ControllerManager;
@@ -37,7 +37,7 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  */
 public class PreviewControllerServlet extends ControllerServlet {
 
-	private static final Logger _logger = LoggerFactory.getLogger(PreviewControllerServlet.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(PreviewControllerServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) 

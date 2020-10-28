@@ -33,13 +33,13 @@ import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
@@ -55,9 +55,9 @@ import freemarker.template.Template;
  */
 public abstract class AbstractWidgetExecutorService {
 
-	private static final Logger _logger = LoggerFactory.getLogger(AbstractWidgetExecutorService.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(AbstractWidgetExecutorService.class);
 
-	protected void buildWidgetsOutput(RequestContext reqCtx, IPage page, String[] widgetOutput) throws ApsSystemException {
+	protected void buildWidgetsOutput(RequestContext reqCtx, IPage page, String[] widgetOutput) throws EntException {
 		try {
 			List<IFrameDecoratorContainer> decorators = this.extractDecorators(reqCtx);
 			Widget[] widgets = page.getWidgets();
@@ -69,12 +69,12 @@ public abstract class AbstractWidgetExecutorService {
 		} catch (Throwable t) {
 			String msg = "Error detected during widget preprocessing";
 			_logger.error(msg, t);
-			throw new ApsSystemException(msg, t);
+			throw new EntException(msg, t);
 		}
 	}
 
 	protected String buildWidgetOutput(RequestContext reqCtx, Widget widget, List<IFrameDecoratorContainer> decorators)
-			throws ApsSystemException {
+			throws EntException {
 		StringBuilder buffer = new StringBuilder();
 		try {
 			if (null != widget && this.isUserAllowed(reqCtx, widget)) {
@@ -100,7 +100,7 @@ public abstract class AbstractWidgetExecutorService {
 		return buffer.toString();
 	}
 
-	public static String extractWidgetOutput(RequestContext reqCtx, WidgetType type) throws ApsSystemException {
+	public static String extractWidgetOutput(RequestContext reqCtx, WidgetType type) throws EntException {
 		if (null == type) {
 			return "";
 		}
@@ -123,11 +123,11 @@ public abstract class AbstractWidgetExecutorService {
 		} catch (Throwable t) {
 			String msg = "Error creating widget output - Type '" + widgetTypeCode + "'";
 			_logger.error(msg, t);
-			throw new ApsSystemException(msg, t);
+			throw new EntException(msg, t);
 		}
 	}
 
-	protected List<IFrameDecoratorContainer> extractDecorators(RequestContext reqCtx) throws ApsSystemException {
+	protected List<IFrameDecoratorContainer> extractDecorators(RequestContext reqCtx) throws EntException {
 		HttpServletRequest request = reqCtx.getRequest();
 		WebApplicationContext wac = ApsWebApplicationUtils.getWebApplicationContext(request);
 		List<IFrameDecoratorContainer> containters = new ArrayList<IFrameDecoratorContainer>();
@@ -141,7 +141,7 @@ public abstract class AbstractWidgetExecutorService {
 			Collections.sort(containters, comparator);
 		} catch (Throwable t) {
 			_logger.error("Error extracting widget decorators", t);
-			throw new ApsSystemException("Error extracting widget decorators", t);
+			throw new EntException("Error extracting widget decorators", t);
 		}
 		return containters;
 	}
@@ -208,7 +208,7 @@ public abstract class AbstractWidgetExecutorService {
 		} catch (Throwable t) {
 			String msg = "Error creating fragment output - code '" + fragment.getCode() + "'";
 			_logger.error(msg, t);
-			throw new ApsSystemException(msg, t);
+			throw new EntException(msg, t);
 		}
 	}
 

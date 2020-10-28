@@ -15,8 +15,8 @@ package com.agiletec.aps.system.services.controller.control;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -30,7 +30,7 @@ import com.agiletec.aps.system.services.url.PageURL;
  */
 public class ErrorManager extends AbstractControlService {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ErrorManager.class);
+	private static final EntLogger _logger = EntLogFactory.getSanitizedLogger(ErrorManager.class);
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {

@@ -18,7 +18,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.ent.exception.EntException;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -34,7 +34,7 @@ public class TestAuthenticator extends BaseTestCase {
         this.init();
     }
 	
-	public void testService_1() throws ApsSystemException {
+	public void testService_1() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		int status = _authenticator.service(reqCtx, ControllerManager.CONTINUE);
 		assertEquals(status, ControllerManager.CONTINUE);
@@ -42,7 +42,7 @@ public class TestAuthenticator extends BaseTestCase {
 		assertEquals(SystemConstants.GUEST_USER_NAME, currentUser.getUsername());
 	}
 	
-	public void testService_2() throws ApsSystemException {
+	public void testService_2() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
 		request.setParameter("username", "admin");
@@ -53,7 +53,7 @@ public class TestAuthenticator extends BaseTestCase {
 		assertEquals("admin", currentUser.getUsername());
 	}
 	
-	public void testServiceFailure() throws ApsSystemException {
+	public void testServiceFailure() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
 		request.setParameter("user", "notauthorized");
