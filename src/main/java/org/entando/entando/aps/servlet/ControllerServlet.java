@@ -28,7 +28,9 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
 import freemarker.ext.jsp.TaglibFactory;
@@ -40,6 +42,8 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import java.security.SecureRandom;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Servlet di controllo, punto di ingresso per le richieste di pagine del portale.
@@ -80,15 +84,36 @@ public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet 
 		return;
 	}
 
-	protected RequestContext initRequestContext(HttpServletRequest request,
-			HttpServletResponse response) {
-		RequestContext reqCtx = new RequestContext();
-		_logger.debug("Request:" + request.getServletPath());
-		request.setAttribute(RequestContext.REQCTX, reqCtx);
-		reqCtx.setRequest(request);
-		reqCtx.setResponse(response);
-		return reqCtx;
-	}
+    protected RequestContext initRequestContext(HttpServletRequest request,
+            HttpServletResponse response) {
+        RequestContext reqCtx = new RequestContext();
+        _logger.debug("Request:" + request.getServletPath());
+        request.setAttribute(RequestContext.REQCTX, reqCtx);
+        reqCtx.setRequest(request);
+        reqCtx.setResponse(response);
+        String currentToken = this.createSecureRandomString();
+        reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN, currentToken);
+        String cspParams = "script-src 'nonce-" + currentToken + "'";
+        ConfigInterface configManager = (ConfigInterface) ApsWebApplicationUtils.getBean(SystemConstants.BASE_CONFIG_MANAGER, request);
+        String extraConfig = configManager.getParam(SystemConstants.PAR_CSP_HEADER_EXTRA_CONFIG);
+        if (!StringUtils.isBlank(extraConfig)) {
+            cspParams += " " + extraConfig;
+        }
+		response.setHeader("content-security-policy", cspParams);
+        return reqCtx;
+    }
+
+    public String createSecureRandomString() {
+        int leftLimit = 48;
+        int rightLimit = 122;
+        int targetStringLength = 64;
+        SecureRandom rand = new SecureRandom();
+        return rand.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+    }
 
 	protected int controlRequest(HttpServletRequest request,
 			RequestContext reqCtx) {
