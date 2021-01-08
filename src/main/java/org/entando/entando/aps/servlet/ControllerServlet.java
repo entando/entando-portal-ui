@@ -30,7 +30,6 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
-import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
 import freemarker.ext.jsp.TaglibFactory;
@@ -91,15 +90,18 @@ public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet 
         request.setAttribute(RequestContext.REQCTX, reqCtx);
         reqCtx.setRequest(request);
         reqCtx.setResponse(response);
-        String currentToken = this.createSecureRandomString();
-        reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN, currentToken);
-        String cspParams = "script-src 'nonce-" + currentToken + "'";
         ConfigInterface configManager = (ConfigInterface) ApsWebApplicationUtils.getBean(SystemConstants.BASE_CONFIG_MANAGER, request);
-        String extraConfig = configManager.getParam(SystemConstants.PAR_CSP_HEADER_EXTRA_CONFIG);
-        if (!StringUtils.isBlank(extraConfig)) {
-            cspParams += " " + extraConfig;
+        String cspEnabled = configManager.getParam(SystemConstants.PAR_CSP_ENABLED);
+        if (Boolean.TRUE.equals(Boolean.valueOf(cspEnabled))) {
+            String currentToken = this.createSecureRandomString();
+            reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN, currentToken);
+            String cspParams = "script-src 'nonce-" + currentToken + "'";
+            String extraConfig = configManager.getParam(SystemConstants.PAR_CSP_HEADER_EXTRA_CONFIG);
+            if (!StringUtils.isBlank(extraConfig)) {
+                cspParams += " " + extraConfig;
+            }
+            response.setHeader("content-security-policy", cspParams);
         }
-		response.setHeader("content-security-policy", cspParams);
         return reqCtx;
     }
 
