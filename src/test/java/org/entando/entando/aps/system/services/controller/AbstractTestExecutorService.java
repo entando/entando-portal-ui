@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.entando.entando.aps.servlet.ControllerServlet;
 import org.entando.entando.aps.system.services.controller.executor.ExecutorBeanContainer;
+import org.junit.jupiter.api.BeforeAll;
 
 import org.springframework.mock.web.MockServletConfig;
 
@@ -41,26 +42,26 @@ import org.springframework.mock.web.MockServletConfig;
  */
 public class AbstractTestExecutorService extends BaseTestCase {
 	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeAll
+	public static void setUp() throws Exception {
+		BaseTestCase.setUp();
 		try {
 			Configuration config = new Configuration();
 			DefaultObjectWrapper wrapper = new DefaultObjectWrapper();
 			config.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 			config.setObjectWrapper(wrapper);
 			config.setTemplateExceptionHandler(TemplateExceptionHandler.DEBUG_HANDLER);
-			TemplateModel templateModel = this.createModel(wrapper);
+			TemplateModel templateModel = createModel(wrapper);
 			ExecutorBeanContainer ebc = new ExecutorBeanContainer(config, templateModel);
-			super.getRequestContext().addExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER, ebc);
+			getRequestContext().addExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER, ebc);
 		} catch (Throwable t) {
 			throw new Exception(t);
 		}
 	}
 	
-	protected TemplateModel createModel(ObjectWrapper wrapper) throws Throwable {
-		HttpServletRequest request = super.getRequestContext().getRequest();
-		HttpServletResponse response = super.getRequestContext().getResponse();
+	protected static TemplateModel createModel(ObjectWrapper wrapper) throws Throwable {
+		HttpServletRequest request = getRequestContext().getRequest();
+		HttpServletResponse response = getRequestContext().getResponse();
 		ServletContext servletContext = request.getSession().getServletContext();
 		AllHttpScopesHashModel hashModel = new AllHttpScopesHashModel(wrapper, servletContext, request); //super.createModel(wrapper, servletContext, request, response);
 		ControllerServlet servlet = new ControllerServlet();

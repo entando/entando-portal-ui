@@ -13,6 +13,10 @@
  */
 package org.entando.entando.aps.system.services.controller.control;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.agiletec.aps.BaseTestCase;
@@ -22,19 +26,16 @@ import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
 public class TestRequestAuthorizator extends BaseTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-
-	public void testService_1() throws Throwable {
+    @Test
+    public void testService_1() throws Throwable {
 		RequestContext reqCtx = this.getRequestContext();
 		this.setUserOnSession(SystemConstants.GUEST_USER_NAME);
 		IPage root = this._pageManager.getOnlineRoot();
@@ -45,7 +46,8 @@ public class TestRequestAuthorizator extends BaseTestCase {
 		assertNull(redirectUrl);
 	}
 
-	public void testService_2() throws Throwable {
+	@Test
+    public void testService_2() throws Throwable {
 		RequestContext reqCtx = this.getRequestContext();
 		this.setUserOnSession("admin");
 		IPage root = this._pageManager.getOnlineRoot();
@@ -56,7 +58,8 @@ public class TestRequestAuthorizator extends BaseTestCase {
 		assertNull(redirectUrl);
 	}
 
-	public void testServiceFailure_1() throws Throwable {
+	@Test
+    public void testServiceFailure_1() throws Throwable {
 		RequestContext reqCtx = this.getRequestContext();
 		((MockHttpServletRequest) reqCtx.getRequest()).setRequestURI("/Entando/it/customers_page.page");
 		this.setUserOnSession(SystemConstants.GUEST_USER_NAME);
@@ -71,7 +74,8 @@ public class TestRequestAuthorizator extends BaseTestCase {
 		assertTrue(redirectUrl.contains("customers_page.page"));
 	}
 
-	public void testServiceFailure_2() throws Throwable {
+	@Test
+    public void testServiceFailure_2() throws Throwable {
 		RequestContext reqCtx = this.getRequestContext();
 		reqCtx.getRequest().getSession().removeAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 		IPage root = this._pageManager.getOnlineRoot();
@@ -80,10 +84,12 @@ public class TestRequestAuthorizator extends BaseTestCase {
 		assertEquals(status, ControllerManager.SYS_ERROR);
 	}
 
+    @BeforeEach
 	private void init() throws Exception {
 		try {
 			this._authorizator = (ControlServiceInterface) this.getApplicationContext().getBean("RequestAuthorizatorControlService");
 			this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
+            super.getRequestContext().removeExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
 		} catch (Throwable e) {
 			throw new Exception(e);
 		}

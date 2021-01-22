@@ -13,28 +13,25 @@
  */
 package org.entando.entando.aps.system.services.controller.control;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 import com.agiletec.aps.system.services.user.UserDetails;
+import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author M.Diana
  */
 public class TestAuthenticator extends BaseTestCase {
 	
-	@Override
-	protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-	
-	public void testService_1() throws ApsSystemException {
+	public void testService_1() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		int status = _authenticator.service(reqCtx, ControllerManager.CONTINUE);
 		assertEquals(status, ControllerManager.CONTINUE);
@@ -42,7 +39,7 @@ public class TestAuthenticator extends BaseTestCase {
 		assertEquals(SystemConstants.GUEST_USER_NAME, currentUser.getUsername());
 	}
 	
-	public void testService_2() throws ApsSystemException {
+	public void testService_2() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
 		request.setParameter("username", "admin");
@@ -53,7 +50,7 @@ public class TestAuthenticator extends BaseTestCase {
 		assertEquals("admin", currentUser.getUsername());
 	}
 	
-	public void testServiceFailure() throws ApsSystemException {
+	public void testServiceFailure() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
 		request.setParameter("user", "notauthorized");
@@ -64,6 +61,7 @@ public class TestAuthenticator extends BaseTestCase {
 		assertEquals(SystemConstants.GUEST_USER_NAME, currentUser.getUsername());
 	}
 	
+    @BeforeEach
 	private void init() throws Exception {
         try {
         	this._authenticator = (ControlServiceInterface) this.getApplicationContext().getBean("AuthenticatorControlService");

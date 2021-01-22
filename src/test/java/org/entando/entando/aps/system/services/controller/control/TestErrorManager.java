@@ -13,27 +13,24 @@
  */
 package org.entando.entando.aps.system.services.controller.control;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
+import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author M.Casari
  */
 public class TestErrorManager extends BaseTestCase {
 	
-	@Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-    
-    public void testService() throws ApsSystemException {
+	public void testService() throws EntException {
 		RequestContext reqCtx = new RequestContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setParameter(RequestContext.PAR_REDIRECT_FLAG, "");
@@ -44,6 +41,7 @@ public class TestErrorManager extends BaseTestCase {
 		assertEquals(status, ControllerManager.REDIRECT);
 	}
 	
+    @BeforeEach
 	private void init() throws Exception {
         try {
         	this._errorManager = (ControlServiceInterface) this.getApplicationContext().getBean("ErrorManagerControlService");
