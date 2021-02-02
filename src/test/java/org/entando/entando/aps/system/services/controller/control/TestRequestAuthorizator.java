@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana
  */
-public class TestRequestAuthorizator extends BaseTestCase {
+class TestRequestAuthorizator extends BaseTestCase {
 
     @Test
     public void testService_1() throws Throwable {

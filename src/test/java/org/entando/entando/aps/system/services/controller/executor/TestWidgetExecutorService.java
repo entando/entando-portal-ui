@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author E.Santoboni
  */
-public class TestWidgetExecutorService extends AbstractTestExecutorService {
+class TestWidgetExecutorService extends AbstractTestExecutorService {
 
 	@Test
     public void testExecutor() throws Exception {

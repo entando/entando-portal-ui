@@ -28,7 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * @author M.Casari
  */
-public class TestErrorManager extends BaseTestCase {
+class TestErrorManager extends BaseTestCase {
 	
 	public void testService() throws EntException {
 		RequestContext reqCtx = new RequestContext();

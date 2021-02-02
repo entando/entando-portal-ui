@@ -29,7 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * @author M.Diana
  */
-public class TestAuthenticator extends BaseTestCase {
+class TestAuthenticator extends BaseTestCase {
 	
 	public void testService_1() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();

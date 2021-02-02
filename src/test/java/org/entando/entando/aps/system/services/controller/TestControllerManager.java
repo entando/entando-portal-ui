@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Diana - W.Ambu
  */
-public class TestControllerManager extends BaseTestCase {
+class TestControllerManager extends BaseTestCase {
     
     @Test
     public void testService_1() throws EntException {

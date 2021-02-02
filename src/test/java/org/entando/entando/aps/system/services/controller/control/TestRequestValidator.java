@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author M.Casari
  */
-public class TestRequestValidator extends BaseTestCase {
+class TestRequestValidator extends BaseTestCase {
 
     @Test
     public void testService() throws EntException {
