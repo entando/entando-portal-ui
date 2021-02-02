@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 class TestRequestAuthorizator extends BaseTestCase {
 
     @Test
-    public void testService_1() throws Throwable {
+    void testService_1() throws Throwable {
 		RequestContext reqCtx = this.getRequestContext();
 		this.setUserOnSession(SystemConstants.GUEST_USER_NAME);
 		IPage root = this._pageManager.getOnlineRoot();
@@ -47,7 +47,7 @@ class TestRequestAuthorizator extends BaseTestCase {
 	}
 
 	@Test
-    public void testService_2() throws Throwable {
+    void testService_2() throws Throwable {
 		RequestContext reqCtx = this.getRequestContext();
 		this.setUserOnSession("admin");
 		IPage root = this._pageManager.getOnlineRoot();
@@ -59,7 +59,7 @@ class TestRequestAuthorizator extends BaseTestCase {
 	}
 
 	@Test
-    public void testServiceFailure_1() throws Throwable {
+    void testServiceFailure_1() throws Throwable {
 		RequestContext reqCtx = this.getRequestContext();
 		((MockHttpServletRequest) reqCtx.getRequest()).setRequestURI("/Entando/it/customers_page.page");
 		this.setUserOnSession(SystemConstants.GUEST_USER_NAME);
@@ -75,7 +75,7 @@ class TestRequestAuthorizator extends BaseTestCase {
 	}
 
 	@Test
-    public void testServiceFailure_2() throws Throwable {
+    void testServiceFailure_2() throws Throwable {
 		RequestContext reqCtx = this.getRequestContext();
 		reqCtx.getRequest().getSession().removeAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 		IPage root = this._pageManager.getOnlineRoot();

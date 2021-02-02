@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 class TestControllerManager extends BaseTestCase {
     
     @Test
-    public void testService_1() throws EntException {
+    void testService_1() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ControllerManager controller = (ControllerManager) this.getService(SystemConstants.CONTROLLER_MANAGER);
         MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
@@ -47,7 +47,7 @@ class TestControllerManager extends BaseTestCase {
     }
     
     @Test
-    public void testService_2() throws EntException {
+    void testService_2() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ControllerManager controller = (ControllerManager) this.getService(SystemConstants.CONTROLLER_MANAGER);
         MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
@@ -63,7 +63,7 @@ class TestControllerManager extends BaseTestCase {
     }
     
     @Test
-    public void testService_3() throws EntException {
+    void testService_3() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ControllerManager controller = (ControllerManager) this.getService(SystemConstants.CONTROLLER_MANAGER);
         MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();

@@ -30,7 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
  */
 class TestErrorManager extends BaseTestCase {
 	
-	public void testService() throws EntException {
+	void testService() throws EntException {
 		RequestContext reqCtx = new RequestContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setParameter(RequestContext.PAR_REDIRECT_FLAG, "");

@@ -31,7 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
  */
 class TestAuthenticator extends BaseTestCase {
 	
-	public void testService_1() throws EntException {
+	void testService_1() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		int status = _authenticator.service(reqCtx, ControllerManager.CONTINUE);
 		assertEquals(status, ControllerManager.CONTINUE);
@@ -39,7 +39,7 @@ class TestAuthenticator extends BaseTestCase {
 		assertEquals(SystemConstants.GUEST_USER_NAME, currentUser.getUsername());
 	}
 	
-	public void testService_2() throws EntException {
+	void testService_2() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
 		request.setParameter("username", "admin");
@@ -50,7 +50,7 @@ class TestAuthenticator extends BaseTestCase {
 		assertEquals("admin", currentUser.getUsername());
 	}
 	
-	public void testServiceFailure() throws EntException {
+	void testServiceFailure() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
 		request.setParameter("user", "notauthorized");

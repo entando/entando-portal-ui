@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 class TestRequestValidator extends BaseTestCase {
 
     @Test
-    public void testService() throws EntException {
+    void testService() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/it/homepage.wp");
         int status = this._requestValidator.service(reqCtx, ControllerManager.CONTINUE);
@@ -48,7 +48,7 @@ class TestRequestValidator extends BaseTestCase {
         assertEquals("homepage", page.getCode());
     }
 
-    public void testServiceFailure_1() throws EntException {
+    void testServiceFailure_1() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/it/notexists.wp");//Page does not exist
         int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
@@ -57,7 +57,7 @@ class TestRequestValidator extends BaseTestCase {
         assertEquals("http://www.entando.com/Entando/it/notfound.page?redirectflag=1", redirectUrl);
     }
 
-    public void testServiceFailure_2() throws EntException {
+    void testServiceFailure_2() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/wrongpath.wp");//wrong path
         int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
@@ -66,7 +66,7 @@ class TestRequestValidator extends BaseTestCase {
         assertEquals("http://www.entando.com/Entando/it/errorpage.page?redirectflag=1", redirectUrl);
     }
 
-    public void testServiceFailure_3() throws EntException {
+    void testServiceFailure_3() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/cc/homepage.wp");//lang does not exist
         int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);

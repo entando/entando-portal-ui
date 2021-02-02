@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 class TestWidgetExecutorService extends AbstractTestExecutorService {
 
 	@Test
-    public void testExecutor() throws Exception {
+    void testExecutor() throws Exception {
 		super.setUserOnSession("admin");
 		IPageManager pageManager = (IPageManager) super.getApplicationContext().getBean(SystemConstants.PAGE_MANAGER);
 		IPage currentPage = pageManager.getOnlinePage("homepage");
