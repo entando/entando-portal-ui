@@ -13,29 +13,29 @@
  */
 package org.entando.entando.aps.system.services.controller.control;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
+import org.entando.entando.ent.exception.EntException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Casari
  */
-public class TestRequestValidator extends BaseTestCase {
+class TestRequestValidator extends BaseTestCase {
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        this.init();
-    }
-
-    public void testService() throws ApsSystemException {
+    @Test
+    void testService() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/it/homepage.wp");
         int status = this._requestValidator.service(reqCtx, ControllerManager.CONTINUE);
@@ -48,7 +48,7 @@ public class TestRequestValidator extends BaseTestCase {
         assertEquals("homepage", page.getCode());
     }
 
-    public void testServiceFailure_1() throws ApsSystemException {
+    void testServiceFailure_1() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/it/notexists.wp");//Page does not exist
         int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
@@ -57,7 +57,7 @@ public class TestRequestValidator extends BaseTestCase {
         assertEquals("http://www.entando.com/Entando/it/notfound.page?redirectflag=1", redirectUrl);
     }
 
-    public void testServiceFailure_2() throws ApsSystemException {
+    void testServiceFailure_2() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/wrongpath.wp");//wrong path
         int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
@@ -66,7 +66,7 @@ public class TestRequestValidator extends BaseTestCase {
         assertEquals("http://www.entando.com/Entando/it/errorpage.page?redirectflag=1", redirectUrl);
     }
 
-    public void testServiceFailure_3() throws ApsSystemException {
+    void testServiceFailure_3() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/cc/homepage.wp");//lang does not exist
         int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
@@ -75,6 +75,7 @@ public class TestRequestValidator extends BaseTestCase {
         assertEquals("http://www.entando.com/Entando/it/errorpage.page?redirectflag=1", redirectUrl);
     }
 
+    @BeforeEach
     private void init() throws Exception {
         try {
             this._requestValidator = (ControlServiceInterface) this.getApplicationContext().getBean("RequestValidatorControlService");

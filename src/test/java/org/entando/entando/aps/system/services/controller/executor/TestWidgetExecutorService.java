@@ -13,6 +13,10 @@
  */
 package org.entando.entando.aps.system.services.controller.executor;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.controller.AbstractTestExecutorService;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -22,19 +26,16 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author E.Santoboni
  */
-public class TestWidgetExecutorService extends AbstractTestExecutorService {
+class TestWidgetExecutorService extends AbstractTestExecutorService {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.init();
-	}
-
-	public void testExecutor() throws Exception {
+	@Test
+    void testExecutor() throws Exception {
 		super.setUserOnSession("admin");
 		IPageManager pageManager = (IPageManager) super.getApplicationContext().getBean(SystemConstants.PAGE_MANAGER);
 		IPage currentPage = pageManager.getOnlinePage("homepage");
@@ -61,6 +62,7 @@ public class TestWidgetExecutorService extends AbstractTestExecutorService {
 		}
 	}
 
+    @BeforeEach
 	private void init() throws Exception {
 		try {
 			this._guiFragmentManager = (IGuiFragmentManager) this.getApplicationContext().getBean(SystemConstants.GUI_FRAGMENT_MANAGER);
