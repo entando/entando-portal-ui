@@ -41,7 +41,7 @@ class TestRequestAuthorizator extends BaseTestCase {
 		IPage root = this._pageManager.getOnlineRoot();
 		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, root);
 		int status = _authorizator.service(reqCtx, ControllerManager.CONTINUE);
-		assertEquals(status, ControllerManager.CONTINUE);
+		assertEquals(ControllerManager.CONTINUE, status);
 		String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
 		assertNull(redirectUrl);
 	}
@@ -53,7 +53,7 @@ class TestRequestAuthorizator extends BaseTestCase {
 		IPage root = this._pageManager.getOnlineRoot();
 		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, root);
 		int status = this._authorizator.service(reqCtx, ControllerManager.CONTINUE);
-		assertEquals(status, ControllerManager.CONTINUE);
+		assertEquals(ControllerManager.CONTINUE, status);
 		String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
 		assertNull(redirectUrl);
 	}
@@ -66,7 +66,7 @@ class TestRequestAuthorizator extends BaseTestCase {
 		IPage requiredPage = this._pageManager.getOnlinePage("customers_page");
 		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, requiredPage);
 		int status = _authorizator.service(reqCtx, ControllerManager.CONTINUE);
-		assertEquals(status, ControllerManager.REDIRECT);
+		assertEquals(ControllerManager.REDIRECT, status);
 		String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
 		assertTrue(redirectUrl.contains("/Entando/it/login.page?"));
 		assertTrue(redirectUrl.contains("redirectflag=1"));
@@ -81,7 +81,7 @@ class TestRequestAuthorizator extends BaseTestCase {
 		IPage root = this._pageManager.getOnlineRoot();
 		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, root);
 		int status = _authorizator.service(reqCtx, ControllerManager.CONTINUE);
-		assertEquals(status, ControllerManager.SYS_ERROR);
+		assertEquals(ControllerManager.SYS_ERROR, status);
 	}
 
     @BeforeEach

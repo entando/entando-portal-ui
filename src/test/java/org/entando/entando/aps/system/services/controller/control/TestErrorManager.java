@@ -38,7 +38,7 @@ class TestErrorManager extends BaseTestCase {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		reqCtx.setResponse(response);
 		int status = _errorManager.service(reqCtx, ControllerManager.ERROR);
-		assertEquals(status, ControllerManager.REDIRECT);
+		assertEquals(ControllerManager.REDIRECT, status);
 	}
 	
     @BeforeEach

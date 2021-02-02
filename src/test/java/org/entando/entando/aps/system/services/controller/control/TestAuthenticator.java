@@ -34,7 +34,7 @@ class TestAuthenticator extends BaseTestCase {
 	void testService_1() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		int status = _authenticator.service(reqCtx, ControllerManager.CONTINUE);
-		assertEquals(status, ControllerManager.CONTINUE);
+		assertEquals(ControllerManager.CONTINUE, status);
 		UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 		assertEquals(SystemConstants.GUEST_USER_NAME, currentUser.getUsername());
 	}
@@ -45,7 +45,7 @@ class TestAuthenticator extends BaseTestCase {
 		request.setParameter("username", "admin");
 		request.setParameter("password", "admin");
 		int status = _authenticator.service(reqCtx, ControllerManager.CONTINUE);
-		assertEquals(status, ControllerManager.CONTINUE);
+		assertEquals(ControllerManager.CONTINUE, status);
 		UserDetails currentUser = (UserDetails) request.getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 		assertEquals("admin", currentUser.getUsername());
 	}
@@ -56,7 +56,7 @@ class TestAuthenticator extends BaseTestCase {
 		request.setParameter("user", "notauthorized");
 		request.setParameter("password", "notauthorized");
 		int status = _authenticator.service(reqCtx, ControllerManager.CONTINUE);
-		assertEquals(status, ControllerManager.CONTINUE);
+		assertEquals(ControllerManager.CONTINUE, status);
 		UserDetails currentUser = (UserDetails) request.getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 		assertEquals(SystemConstants.GUEST_USER_NAME, currentUser.getUsername());
 	}
