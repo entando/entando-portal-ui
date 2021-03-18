@@ -16,11 +16,13 @@ package org.entando.entando.aps.servlet;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
+import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import java.io.IOException;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.entando.entando.ent.exception.EntException;
 import org.slf4j.Logger;
@@ -38,21 +41,23 @@ import org.slf4j.LoggerFactory;
  */
 public class WebUiServlet extends AbstractFrontEndServlet {
     
-    private static final Logger _logger = LoggerFactory.getLogger(WebUiServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebUiServlet.class);
+    
+    private String EXTRAPAR_RESPONSE_CODE; 
     
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         try {
             RequestContext reqCtx = this.initRequestContext(request, response);
-            _logger.debug("Output");
+            logger.debug("Output");
             this.initFreemarker(request, response, reqCtx);
             this.executePage(request, reqCtx);
         } catch (IOException io) {
-            _logger.error("IO error", io);
+            logger.error("IO error", io);
             throw io;
         } catch (Throwable t) {
-            _logger.error("Error building response", t);
+            logger.error("Error building response", t);
             throw new ServletException("Error building response", t);
         }
     }
@@ -68,36 +73,42 @@ public class WebUiServlet extends AbstractFrontEndServlet {
             String pageCode = obj.getString("pageCode");
             String langCode = obj.getString("langCode");
             String username = obj.getString("username");
-            IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, request);
             ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
-            IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
-            IAuthenticationProviderManager authenticationProviderManager = (IAuthenticationProviderManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER, request);
-            IPage currentPage = pageManager.getOnlinePage(pageCode);
-            
             Lang currentLang = langManager.getLang(langCode);
-            UserDetails currentUser = authenticationProviderManager.getUser(username);
-            //boolean authorized = authManager.isAuth(currentUser, currentPage);
-            
+            UserDetails currentUser = null;
+            if (StringUtils.isBlank(username) || username.equalsIgnoreCase(SystemConstants.GUEST_USER_NAME)) {
+                IUserManager userManager = (IUserManager) ApsWebApplicationUtils.getBean(SystemConstants.USER_MANAGER, request);
+                currentUser = userManager.getGuestUser();
+            } else {
+                IAuthenticationProviderManager authenticationProviderManager = (IAuthenticationProviderManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER, request);
+                currentUser = authenticationProviderManager.getUser(username);
+            }
+            ConfigInterface configManager = (ConfigInterface) ApsWebApplicationUtils.getBean(SystemConstants.BASE_CONFIG_MANAGER, request);
+            IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, request);
+            IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
+            IPage currentPage = pageManager.getOnlinePage(pageCode);
+            if (null == currentPage) {
+                String notFoundPageCode = configManager.getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+                currentPage = pageManager.getOnlinePage(notFoundPageCode);
+            } else if (!authManager.isAuth(currentUser, currentPage)) {
+                String loginPageCode = configManager.getParam(SystemConstants.CONFIG_PARAM_LOGIN_PAGE_CODE);
+                currentPage = pageManager.getOnlinePage(loginPageCode);
+            }
+            String applicationBaseURL = obj.getString("applicationBaseURL");
+            if (!StringUtils.isBlank(applicationBaseURL)) {
+                reqCtx.addExtraParam(SystemConstants.EXTRAPAR_WEBUI_APPL_BASE_URL, applicationBaseURL);
+            }
+            String cspToken = obj.getString("cspToken");
+            if (!StringUtils.isBlank(cspToken)) {
+                reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN, cspToken);
+            }
             request.getSession().setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, currentUser);
             reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, currentLang);
             reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, currentPage);
         } catch (Exception e) {
-            _logger.error("Error reading body request", e);
+            logger.error("Error reading body request", e);
             throw new EntException("Error reading body request", e);
         }
-        /*
-        String cspEnabled = configManager.getParam(SystemConstants.PAR_CSP_ENABLED);
-        if (Boolean.TRUE.equals(Boolean.valueOf(cspEnabled))) {
-            String currentToken = this.createSecureRandomString();
-            reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CSP_NONCE_TOKEN, currentToken);
-            String cspParams = "script-src 'nonce-" + currentToken + "'";
-            String extraConfig = configManager.getParam(SystemConstants.PAR_CSP_HEADER_EXTRA_CONFIG);
-            if (!StringUtils.isBlank(extraConfig)) {
-                cspParams += " " + extraConfig;
-            }
-            response.setHeader("content-security-policy", cspParams);
-        }
-        */
         return reqCtx;
     }
     
