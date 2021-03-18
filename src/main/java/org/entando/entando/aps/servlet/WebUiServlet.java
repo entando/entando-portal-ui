@@ -33,20 +33,25 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.entando.entando.ent.exception.EntException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogFactory;
+import org.entando.entando.ent.util.EntLogging.EntLogger;
 
 /**
  * @author E.Santoboni
  */
 public class WebUiServlet extends AbstractFrontEndServlet {
     
-    private static final Logger logger = LoggerFactory.getLogger(WebUiServlet.class);
+    private static final EntLogger logger = EntLogFactory.getSanitizedLogger(StartupListener.class);
     
-    private String EXTRAPAR_RESPONSE_CODE; 
+    private final String WEB_UI_ENABLED = "WEB_UI_ENABLED";
     
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String webUiEnabled = System.getenv(SystemConstants.CSP_HEADER_ENABLED);
+        if (StringUtils.isEmpty(webUiEnabled) || !Boolean.TRUE.toString().equalsIgnoreCase(webUiEnabled)) {
+            logger.warn("Web-UI servlet is not enabled");
+            return;
+        }
         request.setCharacterEncoding("UTF-8");
         try {
             RequestContext reqCtx = this.initRequestContext(request, response);
@@ -75,6 +80,9 @@ public class WebUiServlet extends AbstractFrontEndServlet {
             String username = obj.getString("username");
             ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
             Lang currentLang = langManager.getLang(langCode);
+            if (null == currentLang) {
+                currentLang = langManager.getDefaultLang();
+            }
             UserDetails currentUser = null;
             if (StringUtils.isBlank(username) || username.equalsIgnoreCase(SystemConstants.GUEST_USER_NAME)) {
                 IUserManager userManager = (IUserManager) ApsWebApplicationUtils.getBean(SystemConstants.USER_MANAGER, request);
