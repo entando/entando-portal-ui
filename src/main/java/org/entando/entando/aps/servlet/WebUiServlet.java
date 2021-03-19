@@ -79,22 +79,25 @@ public class WebUiServlet extends AbstractFrontEndServlet {
             String langCode = obj.getString("langCode");
             String username = obj.getString("username");
             ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
-            Lang currentLang = langManager.getLang(langCode);
+            Lang currentLang = (!StringUtils.isBlank(langCode)) ? langManager.getLang(langCode) : null;
             if (null == currentLang) {
                 currentLang = langManager.getDefaultLang();
             }
             UserDetails currentUser = null;
+            IUserManager userManager = (IUserManager) ApsWebApplicationUtils.getBean(SystemConstants.USER_MANAGER, request);
             if (StringUtils.isBlank(username) || username.equalsIgnoreCase(SystemConstants.GUEST_USER_NAME)) {
-                IUserManager userManager = (IUserManager) ApsWebApplicationUtils.getBean(SystemConstants.USER_MANAGER, request);
                 currentUser = userManager.getGuestUser();
             } else {
                 IAuthenticationProviderManager authenticationProviderManager = (IAuthenticationProviderManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER, request);
                 currentUser = authenticationProviderManager.getUser(username);
+                if (null == currentUser) {
+                    currentUser = userManager.getGuestUser();
+                }
             }
             ConfigInterface configManager = (ConfigInterface) ApsWebApplicationUtils.getBean(SystemConstants.BASE_CONFIG_MANAGER, request);
             IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, request);
             IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
-            IPage currentPage = pageManager.getOnlinePage(pageCode);
+            IPage currentPage = (!StringUtils.isBlank(pageCode)) ? pageManager.getOnlinePage(pageCode) : null;
             if (null == currentPage) {
                 String notFoundPageCode = configManager.getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
                 currentPage = pageManager.getOnlinePage(notFoundPageCode);
