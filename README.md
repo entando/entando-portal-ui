@@ -12,3 +12,5 @@
 
 Full instructions on how to develop against local versions of upstream projects are available in the
 [entando-parent-bom](https://github.com/entando/entando-core-bom) project. 
+
+pr-test
