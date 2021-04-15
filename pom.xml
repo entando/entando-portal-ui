@@ -37,6 +37,7 @@
         </repository>
     </repositories>
     <properties>
+        <dependency-check-maven.version>6.1.5</dependency-check-maven.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
