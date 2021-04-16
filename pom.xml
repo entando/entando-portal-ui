@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-portal-ui</artifactId>
-    <version>6.3.0-SNAPSHOT</version>
+    <version>6.3.6</version>
     <packaging>war</packaging>
     <name>Entando Core: Portal UI</name>
     <description>Entando Portal UI: an agile, modern and user-centric open source Portal platform.</description>
