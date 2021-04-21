@@ -113,7 +113,7 @@ public abstract class AbstractWidgetExecutorService {
 				String fragmentOutput = extractFragmentOutput(guiFragment, reqCtx);
 				if (StringUtils.isBlank(fragmentOutput)) {
 					_logger.info("The fragment '{}' of widget '{}' is not available", guiFragment.getCode(), widgetTypeCode);
-					return "The fragment '" + guiFragment.getCode() + "' of widget '" + widgetTypeCode + "' is not available";
+					return "";
 				}
 				return fragmentOutput;
 			} else {
