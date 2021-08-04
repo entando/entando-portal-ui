@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -167,7 +166,7 @@ public class RequestValidator extends AbstractControlService {
 			// la pagina è di livello superiore al primo e il path è corretto
 			String fullPath = matcher.group(2).substring(1).trim();
 			String createdlFullPath = PageUtils.getFullPath(this.getPageManager(), tempPage, "/").toString();
-			if (null != tempPage && createdlFullPath.equals(fullPath)) {
+			if (createdlFullPath.equals(fullPath)) {
 				page = tempPage;
 			}
 		}
@@ -190,11 +189,11 @@ public class RequestValidator extends AbstractControlService {
 	}
 
 	protected String getErrorPageCode() {
-		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_ERROR_PAGE_CODE);
+		return this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_ERROR_PAGE_CODE);
 	}
 
 	protected String getNotFoundPageCode() {
-		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+		return this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
 	}
 
 	protected ILangManager getLangManager() {
@@ -205,25 +204,7 @@ public class RequestValidator extends AbstractControlService {
 		this._langManager = langManager;
 	}
 
-	protected IPageManager getPageManager() {
-		return _pageManager;
-	}
-
-	public void setPageManager(IPageManager pageManager) {
-		this._pageManager = pageManager;
-	}
-
-	protected ConfigInterface getConfigManager() {
-		return configManager;
-	}
-
-	public void setConfigManager(ConfigInterface configService) {
-		this.configManager = configService;
-	}
-
 	private ILangManager _langManager;
-	private IPageManager _pageManager;
-	private ConfigInterface configManager;
 
 	@Deprecated
 	protected Pattern _oldPattern = Pattern.compile("^/(\\w+)/(\\w+)\\Q.wp\\E");
