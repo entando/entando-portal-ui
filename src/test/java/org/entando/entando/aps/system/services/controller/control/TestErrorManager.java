@@ -24,13 +24,15 @@ import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 import org.entando.entando.ent.exception.EntException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Casari
  */
 class TestErrorManager extends BaseTestCase {
 	
-	void testService() throws EntException {
+	@Test
+    void testService() throws EntException {
 		RequestContext reqCtx = new RequestContext();
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setParameter(RequestContext.PAR_REDIRECT_FLAG, "");
