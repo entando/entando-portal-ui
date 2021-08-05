@@ -17,8 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.AbstractControlService;
 
@@ -39,7 +37,7 @@ public class PreviewErrorManager extends AbstractControlService {
 	public int service(RequestContext reqCtx, int status) {
 		if (status == ControllerManager.CONTINUE || status == ControllerManager.OUTPUT) {
 			return ControllerManager.OUTPUT;
-		} 
+		}
 //		int retStatus = ControllerManager.INVALID_STATUS;
 //		_logger.debug("Intervention of the error service");
 //		try {
@@ -59,18 +57,9 @@ public class PreviewErrorManager extends AbstractControlService {
 //		return retStatus;
 		return status;
 	}
-	
+	/*
 	protected String getErrorPageCode() {
-		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_ERROR_PAGE_CODE);
+		return this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_ERROR_PAGE_CODE);
 	}
-	
-	protected ConfigInterface getConfigManager() {
-		return _configManager;
-	}
-	public void setConfigManager(ConfigInterface configService) {
-		this._configManager = configService;
-	}
-	
-	private ConfigInterface _configManager;
-	
+	*/
 }
