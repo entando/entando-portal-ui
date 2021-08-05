@@ -36,8 +36,8 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 
 	private static final Logger _logger = LoggerFactory.getLogger(AbstractControlService.class);
 	
-	private IURLManager urlManager;
-    private IPageManager pageManager;
+	private transient IURLManager urlManager;
+    private transient IPageManager pageManager;
 	
 	/**
 	 * Imposta i parametri di una redirezione.
