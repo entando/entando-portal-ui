@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.AbstractControlService;
-import com.agiletec.aps.system.services.page.IPageManager;
 
 /**
  * Implementazione del sottoservizio di controllo che gestisce gli errori
