@@ -58,9 +58,9 @@ public class PreviewErrorManager extends AbstractControlService {
 //		return retStatus;
 		return status;
 	}
-	
+	/*
 	protected String getErrorPageCode() {
 		return this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_ERROR_PAGE_CODE);
 	}
-	
+	*/
 }
