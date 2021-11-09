@@ -73,9 +73,9 @@ public class Authenticator extends AbstractControlService {
             if (username != null && password != null) {
 				String returnUrl = req.getParameter("returnUrl");
 				returnUrl = (null != returnUrl && returnUrl.trim().length() > 0) ? returnUrl : null;
-				if (_logger.isDebugEnabled()) {
-					_logger.debug("user {} - password ******** ", logSanitizer.sanitize(username));
-				}
+                if (_logger.isDebugEnabled()) {
+                    _logger.debug("user {} - password ******** ", logSanitizer.sanitize(username));
+                }
                 UserDetails user = this.getAuthenticationProvider().getUser(username, password);
                 if (user != null) {
                 	if (!user.isAccountNotExpired()) {
