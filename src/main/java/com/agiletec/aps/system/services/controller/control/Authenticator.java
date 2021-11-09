@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.entando.entando.ent.util.EntSanitization.JavaSecS5145;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 public class Authenticator extends AbstractControlService {
 
 	private static final Logger _logger = LoggerFactory.getLogger(Authenticator.class);
+	private final transient JavaSecS5145<String> logSanitizer = new JavaSecS5145<>();
 
 	
 	@Override
@@ -71,7 +73,9 @@ public class Authenticator extends AbstractControlService {
             if (username != null && password != null) {
 				String returnUrl = req.getParameter("returnUrl");
 				returnUrl = (null != returnUrl && returnUrl.trim().length() > 0) ? returnUrl : null;
-            	_logger.debug("user {} - password ******** ", username );
+				if (_logger.isDebugEnabled()) {
+					_logger.debug("user {} - password ******** ", logSanitizer.sanitize(username));
+				}
                 UserDetails user = this.getAuthenticationProvider().getUser(username, password);
                 if (user != null) {
                 	if (!user.isAccountNotExpired()) {
