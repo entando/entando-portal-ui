@@ -28,9 +28,9 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 
 /**
@@ -95,14 +95,7 @@ public class RequestAuthorizator extends AbstractControlService {
 	}
 	
 	protected String getLoginPageCode() {
-		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_LOGIN_PAGE_CODE);
-	}
-	
-	protected ConfigInterface getConfigManager() {
-		return _configManager;
-	}
-	public void setConfigManager(ConfigInterface configService) {
-		this._configManager = configService;
+		return this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_LOGIN_PAGE_CODE);
 	}
 
 	protected IAuthorizationManager getAuthManager() {
@@ -113,6 +106,5 @@ public class RequestAuthorizator extends AbstractControlService {
 	}
 	
 	private IAuthorizationManager _authManager;
-	private ConfigInterface _configManager;
 
 }

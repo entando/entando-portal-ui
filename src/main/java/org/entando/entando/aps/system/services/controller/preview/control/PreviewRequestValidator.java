@@ -156,16 +156,7 @@ public class PreviewRequestValidator extends AbstractControlService {
 		this._langManager = langManager;
 	}
 
-	protected IPageManager getPageManager() {
-		return _pageManager;
-	}
-
-	public void setPageManager(IPageManager pageManager) {
-		this._pageManager = pageManager;
-	}
-
 	private ILangManager _langManager;
-	private IPageManager _pageManager;
 
 	protected Pattern _pattern = Pattern.compile("^/preview/(\\w+)/((\\w+)*)");
 

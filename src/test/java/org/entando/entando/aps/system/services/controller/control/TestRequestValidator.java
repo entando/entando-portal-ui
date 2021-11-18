@@ -48,6 +48,7 @@ class TestRequestValidator extends BaseTestCase {
         assertEquals("homepage", page.getCode());
     }
 
+    @Test
     void testServiceFailure_1() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/it/notexists.wp");//Page does not exist
@@ -57,6 +58,7 @@ class TestRequestValidator extends BaseTestCase {
         assertEquals("http://www.entando.com/Entando/it/notfound.page?redirectflag=1", redirectUrl);
     }
 
+    @Test
     void testServiceFailure_2() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/wrongpath.wp");//wrong path
@@ -66,6 +68,7 @@ class TestRequestValidator extends BaseTestCase {
         assertEquals("http://www.entando.com/Entando/it/errorpage.page?redirectflag=1", redirectUrl);
     }
 
+    @Test
     void testServiceFailure_3() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/cc/homepage.wp");//lang does not exist

@@ -25,13 +25,15 @@ import com.agiletec.aps.system.services.controller.control.ControlServiceInterfa
 import com.agiletec.aps.system.services.user.UserDetails;
 import org.entando.entando.ent.exception.EntException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author M.Diana
  */
 class TestAuthenticator extends BaseTestCase {
 	
-	void testService_1() throws EntException {
+	@Test
+    void testService_1() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		int status = _authenticator.service(reqCtx, ControllerManager.CONTINUE);
 		assertEquals(ControllerManager.CONTINUE, status);
@@ -39,7 +41,8 @@ class TestAuthenticator extends BaseTestCase {
 		assertEquals(SystemConstants.GUEST_USER_NAME, currentUser.getUsername());
 	}
 	
-	void testService_2() throws EntException {
+	@Test
+    void testService_2() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
 		request.setParameter("username", "admin");
@@ -50,7 +53,8 @@ class TestAuthenticator extends BaseTestCase {
 		assertEquals("admin", currentUser.getUsername());
 	}
 	
-	void testServiceFailure() throws EntException {
+	@Test
+    void testServiceFailure() throws EntException {
 		RequestContext reqCtx = this.getRequestContext();
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
 		request.setParameter("user", "notauthorized");

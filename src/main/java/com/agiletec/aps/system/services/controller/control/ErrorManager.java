@@ -19,9 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.url.PageURL;
 
 /**
@@ -62,16 +61,7 @@ public class ErrorManager extends AbstractControlService {
 	}
 	
 	protected String getErrorPageCode() {
-		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_ERROR_PAGE_CODE);
+		return this.getPageManager().getConfig(IPageManager.CONFIG_PARAM_ERROR_PAGE_CODE);
 	}
-	
-	protected ConfigInterface getConfigManager() {
-		return _configManager;
-	}
-	public void setConfigManager(ConfigInterface configService) {
-		this._configManager = configService;
-	}
-	
-	private ConfigInterface _configManager;
 	
 }

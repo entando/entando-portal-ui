@@ -21,9 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.controller.ControllerManager;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.url.PageURL;
 
@@ -35,6 +35,9 @@ import com.agiletec.aps.system.services.url.PageURL;
 public abstract class AbstractControlService implements ControlServiceInterface {
 
 	private static final Logger _logger = LoggerFactory.getLogger(AbstractControlService.class);
+	
+	private transient IURLManager urlManager;
+    private transient IPageManager pageManager;
 	
 	/**
 	 * Imposta i parametri di una redirezione.
@@ -99,26 +102,21 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 	 * @return Il valore del parametro
 	 */
 	protected String getParameter(String name, RequestContext reqCtx){
-		String param = reqCtx.getRequest().getParameter(name);
-		return param;
+		return reqCtx.getRequest().getParameter(name);
 	}
 	
 	protected IURLManager getUrlManager() {
-		return _urlManager;
+		return urlManager;
 	}
 	public void setUrlManager(IURLManager urlManager) {
-		this._urlManager = urlManager;
+		this.urlManager = urlManager;
 	}
-	
-	/**
-	 * Il log di sistema.
-	 */
-	@Deprecated
-	protected Logger _log = ApsSystemUtils.getLogger();
-	
-	/**
-	 * Riferimento all'Url Manager.
-	 */
-	private IURLManager _urlManager;
+
+	protected IPageManager getPageManager() {
+		return pageManager;
+	}
+	public void setPageManager(IPageManager pageManager) {
+		this.pageManager = pageManager;
+	}
 	
 }
