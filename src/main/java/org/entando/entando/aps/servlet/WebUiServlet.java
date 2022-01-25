@@ -78,11 +78,14 @@ public class WebUiServlet extends AbstractFrontEndServlet {
         reqCtx.setRequest(request);
         reqCtx.setResponse(response);
         String body = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+        String username = request.getHeader("X-Forwarded-User");
         try {
             JSONObject obj = new JSONObject(body);
             String pageCode = this.getParamValue(obj, PAGE_CODE_KEY);
             String langCode = this.getParamValue(obj, LANG_CODE_KEY);
-            String username = this.getParamValue(obj, USERNAME_KEY);
+            if (username == null) {
+                username = this.getParamValue(obj, USERNAME_KEY);
+            }
             ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
             Lang currentLang = (!StringUtils.isBlank(langCode)) ? langManager.getLang(langCode) : null;
             if (null == currentLang) {
@@ -91,7 +94,7 @@ public class WebUiServlet extends AbstractFrontEndServlet {
                 }
                 currentLang = langManager.getDefaultLang();
             }
-            UserDetails currentUser = null;
+            UserDetails currentUser;
             IUserManager userManager = (IUserManager) ApsWebApplicationUtils.getBean(SystemConstants.USER_MANAGER, request);
             if (StringUtils.isBlank(username) || SystemConstants.GUEST_USER_NAME.equalsIgnoreCase(username)) {
                 currentUser = userManager.getGuestUser();
