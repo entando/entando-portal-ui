@@ -14,15 +14,11 @@
 package org.entando.entando.aps.servlet;
 
 import java.io.IOException;
-import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.entando.entando.aps.system.services.controller.executor.ExecutorBeanContainer;
-import org.entando.entando.aps.system.services.controller.executor.ExecutorServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,15 +28,6 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
-import freemarker.ext.jsp.TaglibFactory;
-import freemarker.ext.servlet.AllHttpScopesHashModel;
-import freemarker.ext.servlet.ServletContextHashModel;
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.TemplateExceptionHandler;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
 import java.security.SecureRandom;
 import org.apache.commons.lang3.StringUtils;
 
@@ -49,7 +36,7 @@ import org.apache.commons.lang3.StringUtils;
  * Predispone il contesto di richiesta, invoca il controller e ne gestisce lo stato di uscita.
  * @author M.Diana - W.Ambu
  */
-public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet {
+public class ControllerServlet extends AbstractFrontEndServlet {
 
 	private static final Logger _logger = LoggerFactory.getLogger(ControllerServlet.class);
 
@@ -120,49 +107,7 @@ public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet 
 	protected int controlRequest(HttpServletRequest request,
 			RequestContext reqCtx) {
 		ControllerManager controller = (ControllerManager) ApsWebApplicationUtils.getBean(SystemConstants.CONTROLLER_MANAGER, request);
-		int status = controller.service(reqCtx);
-		return status;
-	}
-
-	protected void initFreemarker(HttpServletRequest request,
-			HttpServletResponse response, RequestContext reqCtx)
-			throws TemplateModelException {
-		Configuration config = new Configuration();
-		DefaultObjectWrapper wrapper = new DefaultObjectWrapper();
-		config.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
-		config.setObjectWrapper(wrapper);
-		config.setTemplateExceptionHandler(TemplateExceptionHandler.DEBUG_HANDLER);
-		TemplateModel templateModel = this.createModel(wrapper, this.getServletContext(), request, response);
-		ExecutorBeanContainer ebc = new ExecutorBeanContainer(config, templateModel);
-		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER, ebc);
-	}
-
-	protected void executePage(HttpServletRequest request, RequestContext reqCtx) {
-		List<ExecutorServiceInterface> executors = (List<ExecutorServiceInterface>) ApsWebApplicationUtils.getBean("ExecutorServices", request);
-		for (int i = 0; i < executors.size(); i++) {
-			ExecutorServiceInterface executor = executors.get(i);
-			executor.service(reqCtx);
-		}
-	}
-
-	@Override
-	protected TemplateModel createModel(ObjectWrapper wrapper, ServletContext servletContext, 
-			HttpServletRequest request, HttpServletResponse response) throws TemplateModelException {
-		TemplateModel template = super.createModel(wrapper, servletContext, request, response);
-		if (template instanceof AllHttpScopesHashModel) {
-			AllHttpScopesHashModel hashModel = ((AllHttpScopesHashModel) template);
-			ServletContextHashModel servletContextModel = (ServletContextHashModel) hashModel.get(KEY_APPLICATION);
-			if (null == servletContextModel.getServlet()) {
-				ServletContextHashModel newServletContextModel = new ServletContextHashModel(this, wrapper);
-				servletContextModel = new ServletContextHashModel(this, wrapper);
-				servletContext.setAttribute(ATTR_APPLICATION_MODEL, servletContextModel);
-				TaglibFactory taglibs = new TaglibFactory(servletContext);
-				servletContext.setAttribute(ATTR_JSP_TAGLIBS_MODEL, taglibs);
-				hashModel.putUnlistedModel(KEY_APPLICATION, newServletContextModel);
-				hashModel.putUnlistedModel(KEY_APPLICATION_PRIVATE, newServletContextModel);
-			}
-		}
-		return template;
+		return controller.service(reqCtx);
 	}
 
 	protected void redirect(RequestContext reqCtx, HttpServletResponse response)
@@ -189,8 +134,5 @@ public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet 
 			throw new ServletException("Service not available");
 		}
 	}
-
-	private static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
-	private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
 
 }
