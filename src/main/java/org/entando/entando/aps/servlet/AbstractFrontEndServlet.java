@@ -40,13 +40,11 @@ import freemarker.template.TemplateModelException;
 
 public class AbstractFrontEndServlet extends freemarker.ext.servlet.FreemarkerServlet {
 
-	private static final Logger _logger = LoggerFactory.getLogger(AbstractFrontEndServlet.class);
-    
 	protected void initFreemarker(HttpServletRequest request,
 			HttpServletResponse response, RequestContext reqCtx)
 			throws TemplateModelException {
-		Configuration config = new Configuration();
-		DefaultObjectWrapper wrapper = new DefaultObjectWrapper();
+		Configuration config = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
+		DefaultObjectWrapper wrapper = new DefaultObjectWrapper(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 		config.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 		config.setObjectWrapper(wrapper);
 		config.setTemplateExceptionHandler(TemplateExceptionHandler.DEBUG_HANDLER);
@@ -64,7 +62,7 @@ public class AbstractFrontEndServlet extends freemarker.ext.servlet.FreemarkerSe
 	}
 
 	@Override
-	protected TemplateModel createModel(ObjectWrapper wrapper, ServletContext servletContext, 
+	protected TemplateModel createModel(ObjectWrapper wrapper, ServletContext servletContext,
 			HttpServletRequest request, HttpServletResponse response) throws TemplateModelException {
 		TemplateModel template = super.createModel(wrapper, servletContext, request, response);
 		if (template instanceof AllHttpScopesHashModel) {
@@ -82,7 +80,7 @@ public class AbstractFrontEndServlet extends freemarker.ext.servlet.FreemarkerSe
 		}
 		return template;
 	}
-    
+
 	private static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
 	private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
 

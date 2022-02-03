@@ -41,15 +41,15 @@ import org.entando.entando.ent.util.EntLogging.EntLogger;
  * @author E.Santoboni
  */
 public class WebUiServlet extends AbstractFrontEndServlet {
-    
+
     private static final EntLogger logger = EntLogFactory.getSanitizedLogger(StartupListener.class);
-    
+
     public static final String PAGE_CODE_KEY = "pageCode";
     public static final String LANG_CODE_KEY = "langCode";
     public static final String USERNAME_KEY = "username";
     public static final String BASE_URL_KEY = "applicationBaseURL";
     public static final String CSP_TOKEN_KEY = "cspToken";
-    
+
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String webUiEnabled = System.getenv(SystemConstants.WEB_UI_ENABLED);
@@ -71,7 +71,7 @@ public class WebUiServlet extends AbstractFrontEndServlet {
             throw new ServletException("Error building response", t);
         }
     }
-    
+
     protected RequestContext initRequestContext(HttpServletRequest request, HttpServletResponse response) throws IOException, EntException {
         RequestContext reqCtx = new RequestContext();
         request.setAttribute(RequestContext.REQCTX, reqCtx);
@@ -86,26 +86,8 @@ public class WebUiServlet extends AbstractFrontEndServlet {
             if (username == null) {
                 username = this.getParamValue(obj, USERNAME_KEY);
             }
-            ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
-            Lang currentLang = (!StringUtils.isBlank(langCode)) ? langManager.getLang(langCode) : null;
-            if (null == currentLang) {
-                if (!StringUtils.isBlank(langCode)) {
-                    logger.warn("Invalid language requested: '{}'", langCode);
-                }
-                currentLang = langManager.getDefaultLang();
-            }
-            UserDetails currentUser;
-            IUserManager userManager = (IUserManager) ApsWebApplicationUtils.getBean(SystemConstants.USER_MANAGER, request);
-            if (StringUtils.isBlank(username) || SystemConstants.GUEST_USER_NAME.equalsIgnoreCase(username)) {
-                currentUser = userManager.getGuestUser();
-            } else {
-                IAuthenticationProviderManager authenticationProviderManager = (IAuthenticationProviderManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER, request);
-                currentUser = authenticationProviderManager.getUser(username);
-                if (null == currentUser) {
-                    logger.warn("Invalid user requested: '{}'", username);
-                    currentUser = userManager.getGuestUser();
-                }
-            }
+            Lang currentLang = getLang(request, langCode);
+            UserDetails currentUser = getUserDetails(request, username);
             ConfigInterface configManager = (ConfigInterface) ApsWebApplicationUtils.getBean(SystemConstants.BASE_CONFIG_MANAGER, request);
             IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, request);
             IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
@@ -140,12 +122,39 @@ public class WebUiServlet extends AbstractFrontEndServlet {
         }
         return reqCtx;
     }
-    
+
+    private Lang getLang(HttpServletRequest request, String langCode) {
+        ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
+        Lang currentLang = (!StringUtils.isBlank(langCode)) ? langManager.getLang(langCode) : null;
+        if (null == currentLang) {
+            if (!StringUtils.isBlank(langCode)) {
+                logger.warn("Invalid language requested: '{}'", langCode);
+            }
+            currentLang = langManager.getDefaultLang();
+        }
+        return currentLang;
+    }
+
+    private UserDetails getUserDetails(HttpServletRequest request, String username) throws EntException {
+        UserDetails currentUser;
+        IUserManager userManager = (IUserManager) ApsWebApplicationUtils.getBean(SystemConstants.USER_MANAGER, request);
+        if (StringUtils.isBlank(username) || SystemConstants.GUEST_USER_NAME.equalsIgnoreCase(username)) {
+            currentUser = userManager.getGuestUser();
+        } else {
+            IAuthenticationProviderManager authenticationProviderManager = (IAuthenticationProviderManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER, request);
+            currentUser = authenticationProviderManager.getUser(username);
+            if (null == currentUser) {
+                logger.warn("Invalid user requested: '{}'", username);
+                currentUser = userManager.getGuestUser();
+            }
+        }
+        return currentUser;
+    }
+
     private String getParamValue(JSONObject obj, String paramName) throws JSONException {
         if (obj.has(paramName)) {
             return obj.getString(paramName);
         }
         return null;
     }
-    
 }
