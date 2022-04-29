@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-portal-ui</artifactId>
-    <version>6.3.9</version>
+    <version>6.5.0</version>
     <packaging>war</packaging>
     <name>Entando Core: Portal UI</name>
     <description>Entando Portal UI: an agile, modern and user-centric open source Portal platform.</description>
@@ -204,7 +204,7 @@
             <dependency>
                 <groupId>org.entando</groupId>
                 <artifactId>entando-core-bom</artifactId>
-                <version>6.2.267</version>
+                <version>6.5.0-ECS-211</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
