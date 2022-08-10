@@ -13,6 +13,7 @@
  */
 package org.entando.entando.aps.servlet;
 
+import freemarker.core.TemplateClassResolver;
 import java.io.IOException;
 import java.util.List;
 
@@ -132,6 +133,7 @@ public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet 
 		config.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 		config.setObjectWrapper(wrapper);
 		config.setTemplateExceptionHandler(TemplateExceptionHandler.DEBUG_HANDLER);
+		config.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
 		TemplateModel templateModel = this.createModel(wrapper, this.getServletContext(), request, response);
 		ExecutorBeanContainer ebc = new ExecutorBeanContainer(config, templateModel);
 		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER, ebc);
