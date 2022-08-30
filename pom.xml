@@ -42,7 +42,7 @@
         <owaspSuppressionFileLocation>
             https://raw.githubusercontent.com/entando/entando-core-parent/v${project.parent.version}/owasp-dependency-check-suppression.xml
         </owaspSuppressionFileLocation>
-        <entando-core-bom.version>7.2.0-ENG-4134</entando-core-bom.version>
+        <entando-core-bom.version>7.2.0-ENG-4096</entando-core-bom.version>
     </properties>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
