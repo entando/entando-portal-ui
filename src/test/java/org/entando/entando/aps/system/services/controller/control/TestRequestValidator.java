@@ -21,10 +21,14 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.IParameterizableManager;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
+import java.util.HashMap;
+import java.util.Map;
 import org.entando.entando.ent.exception.EntException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +42,7 @@ class TestRequestValidator extends BaseTestCase {
     void testService() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/it/homepage.wp");
-        int status = this._requestValidator.service(reqCtx, ControllerManager.CONTINUE);
+        int status = this.requestValidator.service(reqCtx, ControllerManager.CONTINUE);
         assertEquals(ControllerManager.CONTINUE, status);
         Lang lang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
         IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
@@ -50,19 +54,37 @@ class TestRequestValidator extends BaseTestCase {
 
     @Test
     void testServiceFailure_1() throws EntException {
-        RequestContext reqCtx = this.getRequestContext();
-        ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/it/notexists.wp");//Page does not exist
-        int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
-        assertEquals(ControllerManager.REDIRECT, status);
-        String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-        assertEquals("http://www.entando.com/Entando/it/notfound.page?redirectflag=1", redirectUrl);
+        String notFoundPageCode = this.pageManager.getConfig(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
+        Map<String, String> paramsToUpgrade = new HashMap<>();
+        try {
+            RequestContext reqCtx = this.getRequestContext();
+            ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/it/notexists.wp");//Page does not exist
+            int status = this.requestValidator.service(reqCtx, ControllerManager.CONTINUE);
+            assertEquals(ControllerManager.CONTINUE, status);
+            IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
+            assertEquals(notFoundPageCode, page.getCode());
+            
+            paramsToUpgrade.put(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, "invalid");
+            ((IParameterizableManager)this.pageManager).updateParams(paramsToUpgrade);
+            
+            ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/it/notexists.wp");//Page does not exist
+            status = this.requestValidator.service(reqCtx, ControllerManager.CONTINUE);
+            assertEquals(ControllerManager.REDIRECT, status);
+            String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
+            assertEquals("http://www.entando.com/Entando/it/errorpage.page?redirectflag=1", redirectUrl);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            paramsToUpgrade.put(IPageManager.CONFIG_PARAM_NOT_FOUND_PAGE_CODE, notFoundPageCode);
+            ((IParameterizableManager)this.pageManager).updateParams(paramsToUpgrade);
+        }
     }
 
     @Test
     void testServiceFailure_2() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/wrongpath.wp");//wrong path
-        int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
+        int status = this.requestValidator.service(reqCtx, ControllerManager.CONTINUE);
         assertEquals(ControllerManager.REDIRECT, status);
         String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
         assertEquals("http://www.entando.com/Entando/it/errorpage.page?redirectflag=1", redirectUrl);
@@ -72,7 +94,7 @@ class TestRequestValidator extends BaseTestCase {
     void testServiceFailure_3() throws EntException {
         RequestContext reqCtx = this.getRequestContext();
         ((MockHttpServletRequest) reqCtx.getRequest()).setServletPath("/cc/homepage.wp");//lang does not exist
-        int status = _requestValidator.service(reqCtx, ControllerManager.CONTINUE);
+        int status = this.requestValidator.service(reqCtx, ControllerManager.CONTINUE);
         assertEquals(ControllerManager.REDIRECT, status);
         String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
         assertEquals("http://www.entando.com/Entando/it/errorpage.page?redirectflag=1", redirectUrl);
@@ -81,12 +103,14 @@ class TestRequestValidator extends BaseTestCase {
     @BeforeEach
     private void init() throws Exception {
         try {
-            this._requestValidator = (ControlServiceInterface) this.getApplicationContext().getBean("RequestValidatorControlService");
+            this.requestValidator = (ControlServiceInterface) this.getApplicationContext().getBean("RequestValidatorControlService");
+            this.pageManager = this.getApplicationContext().getBean(SystemConstants.PAGE_MANAGER, IPageManager.class);
         } catch (Throwable e) {
             throw new Exception(e);
         }
     }
-
-    private ControlServiceInterface _requestValidator;
+    
+    private ControlServiceInterface requestValidator;
+    private IPageManager pageManager;
 
 }
