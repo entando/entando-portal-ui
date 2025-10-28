@@ -4,11 +4,11 @@
     <parent>
         <groupId>org.entando</groupId>
         <artifactId>entando-core-parent</artifactId>
-        <version>6.5.0-ENG-5128-PR-156</version>
+        <version>6.5.0</version>
     </parent>
     <groupId>org.entando.entando</groupId>
     <artifactId>entando-portal-ui</artifactId>
-    <version>6.5.3</version>
+    <version>6.6.0</version>
     <packaging>war</packaging>
     <name>Entando Core: Portal UI</name>
     <description>Entando Portal UI: an agile, modern and user-centric open source Portal platform.</description>
@@ -39,6 +39,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.skip>true</checkstyle.skip>
+        <entando-core-bom-version>6.6.0</entando-core-bom-version>
     </properties>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -225,7 +226,7 @@
             <dependency>
                 <groupId>org.entando</groupId>
                 <artifactId>entando-core-bom</artifactId>
-                <version>6.5.0-ENG-5128</version>
+                <version>${entando-core-bom-version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
